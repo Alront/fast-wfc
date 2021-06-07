@@ -70,12 +70,12 @@ namespace timings {
     }
 
     void write_out_timings(const char* filename) {
-        /*std::ofstream file(filename);
+        std::ofstream file(filename);
         file << "name+tag,name,tag,counter,cycles,total" << std::endl;
         for(std::string line : timings::lines) {
             file << line << std::endl;
         }
-        file.close();*/
+        file.close();
     }
 
 }
