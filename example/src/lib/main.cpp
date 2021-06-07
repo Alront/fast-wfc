@@ -15,6 +15,8 @@
 #include "utils.hpp"
 #include <unordered_set>
 
+#include "timer.cpp"
+
 using namespace rapidxml;
 using namespace std;
 
@@ -62,12 +64,20 @@ void read_overlapping_instance(xml_node<> *node) {
     for (unsigned test = 0; test < 10; test++) {
       int seed = get_random_seed();
       OverlappingWFC<Color> wfc(*m, options, seed);
+
+      timings::init_timer(name.c_str());
+
       std::optional<Array2D<Color>> success = wfc.run();
+      timings::record_timing("propagate");
+      timings::record_timing("observe");
+
       if (success.has_value()) {
+        timings::record_timing("finish_run");
         write_image_png("results/" + name + to_string(i) + ".png", *success);
         cout << name << " finished!" << endl;
         break;
       } else {
+        timings::record_timing_custom("finish_run", -1, -1);
         cout << "failed!" << endl;
       }
     }
@@ -324,6 +334,8 @@ int main() {
   start = std::chrono::system_clock::now();
 
   read_config_file("samples.xml");
+  std::string timings_file = "timings.txt";
+  timings::write_out_timings(timings_file.c_str());
 
   end = std::chrono::system_clock::now();
   int elapsed_s =

@@ -4,6 +4,7 @@ example/wfc_demo
 
 # The results of the algorithm
 example/results/*
+example/timings.txt
 
 # The library files
 lib/*
